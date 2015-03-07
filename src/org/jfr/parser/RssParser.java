@@ -95,7 +95,7 @@ public class RssParser implements FeedParserIF
 	 */
 	private void parseNode(Feed feed, Node node)
 	{
-		switch(node.getNodeName().toLowerCase())
+		switch (node.getNodeName().toLowerCase())
 		{
 			case "title":
 				feed.setTitle(getNodeValue(node));
@@ -107,6 +107,10 @@ public class RssParser implements FeedParserIF
 			
 			case "link":
 				feed.setLink(getNodeValue(node));
+				break;
+				
+			case "lastbuilddate":
+				feed.setUpdated(getNodeValue(node));
 				break;
 			
 			case "item":

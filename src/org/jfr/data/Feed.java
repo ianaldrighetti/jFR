@@ -46,6 +46,11 @@ public class Feed
 	private List<Author> authors;
 	
 	/**
+	 * The last time at which the feed was updated.
+	 */
+	private String updated;
+	
+	/**
 	 * Initializes the Feed.
 	 */
 	public Feed()
@@ -188,5 +193,23 @@ public class Feed
 	public void setAuthors(List<Author> authors)
 	{
 		this.authors = new ArrayList<>(authors);
+	}
+
+	/**
+	 *
+	 * @return The value of updated.
+	 */
+	public String getUpdated()
+	{
+		return updated;
+	}
+
+	/**
+	 *
+	 * @param updated The value of updated.
+	 */
+	public void setUpdated(String updated)
+	{
+		this.updated = updated;
 	}
 }

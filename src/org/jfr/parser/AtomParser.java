@@ -72,6 +72,10 @@ public class AtomParser implements FeedParserIF
 				feed.addAuthor(getAuthor(node));
 				break;
 			
+			case "updated":
+				feed.setUpdated(getNodeValue(node));
+				break;
+				
 			case "link":
 				// Make sure it isn't some other link.
 				if (getNodeAttribute(node, "rel") != null && !getNodeAttribute(node, "rel").equalsIgnoreCase("alternate"))
