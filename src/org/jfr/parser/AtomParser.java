@@ -233,13 +233,12 @@ public class AtomParser implements FeedParserIF
 				feedItem.setPublished(getNodeValue(node));
 				break;
 				
-			// TODO This is bad... possibly overwriting one or the other.
 			case "summary":
-				feedItem.setDescription(getNodeValue(node, true));
+				feedItem.setSummary(getNodeValue(node, true));
 				break;
 				
 			case "content":
-				feedItem.setDescription(getNodeValue(node, true));
+				feedItem.setContent(getNodeValue(node, true));
 				break;
 				
 			case "author":

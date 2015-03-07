@@ -22,9 +22,14 @@ public class FeedItem
 	private String link;
 	
 	/**
-	 * The description of the item.
+	 * The summary of the item.
 	 */
-	private String description;
+	private String summary;
+	
+	/**
+	 * The content of the item.
+	 */
+	private String content;
 	
 	/**
 	 * The author(s).
@@ -94,18 +99,36 @@ public class FeedItem
 	 *
 	 * @return The value of description.
 	 */
-	public String getDescription()
+	public String getSummary()
 	{
-		return description;
+		return summary;
 	}
 
 	/**
 	 *
 	 * @param description The value of description.
 	 */
-	public void setDescription(String description)
+	public void setSummary(String description)
 	{
-		this.description = description;
+		this.summary = description;
+	}
+
+	/**
+	 *
+	 * @return The value of content.
+	 */
+	public String getContent()
+	{
+		return content;
+	}
+
+	/**
+	 *
+	 * @param content The value of content.
+	 */
+	public void setContent(String content)
+	{
+		this.content = content;
 	}
 
 	/**
@@ -197,7 +220,7 @@ public class FeedItem
 	public String toString()
 	{
 		return "FeedItem [title=" + title + ", link=" + link + ", description="
-				+ description + ", authors=" + Arrays.toString(authors.toArray()) + ", guid=" + guid
+				+ summary + ", authors=" + Arrays.toString(authors.toArray()) + ", guid=" + guid
 				+ ", pubDate=" + published + ", updated = " + updated + "]";
 	}
 }

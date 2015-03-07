@@ -179,7 +179,8 @@ public class RssParser implements FeedParserIF
 				break;
 			
 			case "description":
-				feedItem.setDescription(getNodeValue(node));
+				feedItem.setSummary(getNodeValue(node));
+				feedItem.setContent(getNodeValue(node));
 				break;
 			
 			case "pubdate":
