@@ -1,18 +1,16 @@
 package org.jfr;
 
 import java.io.File;
-import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.jfr.data.Feed;
+import org.jfr.exception.ParserException;
 import org.jfr.parser.AtomParser;
 import org.jfr.parser.RssParser;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 /**
  * The core of the parser.
@@ -21,6 +19,16 @@ import org.xml.sax.SAXException;
  */
 public class JFRParser
 {
+	/**
+	 * An instance of an RSS parser, if any.
+	 */
+	private RssParser rssParser;
+	
+	/**
+	 * An instance of an Atom parser, if any.
+	 */
+	private AtomParser atomParser;
+	
 	/**
 	 * Parses the feed from a file.
 	 * 
@@ -35,30 +43,17 @@ public class JFRParser
 		{
 			DocumentBuilder builder = documentFactory.newDocumentBuilder();
 			Document document = builder.parse(file);
-			
+
 			return parseDocument(document);
 		}
-		catch (ParserConfigurationException e)
+		catch (Exception e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ParserException("An error occurred while attempting to parse the file.", e);
 		}
-		catch (SAXException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return null;
 	}
 	
 	/**
-	 * Parses the document.
+	 * Parses the document, passing it on to the appropriate feed type parser.
 	 * 
 	 * @param document The document to parse.
 	 * @return The Feed.
@@ -72,16 +67,47 @@ public class JFRParser
 		// Now that we have the first child, let's see if it is RSS or Atom.
 		if (element.getNodeName().equalsIgnoreCase("rss"))
 		{
-			return (new RssParser()).parse(document);
+			return getRssParser().parse(document);
 		}
-		else if (element.getNodeName().equalsIgnoreCase("atom"))
+		else if (element.getNodeName().equalsIgnoreCase("feed"))
 		{
-			return (new AtomParser()).parse(document);
+			return getAtomParser().parse(document);
 		}
 		else
 		{
-			// TODO: A special Exception.
-			throw new IllegalArgumentException("Yeah...");
+			throw new ParserException("The parser could not determine the feed type from the file.");
 		}
+	}
+	
+	/**
+	 * Returns an instance of an RSS parser.
+	 * 
+	 * @return RssParser.
+	 */
+	private RssParser getRssParser()
+	{
+		if (rssParser != null)
+		{
+			return rssParser;
+		}
+		
+		rssParser = new RssParser();
+		return rssParser;
+	}
+	
+	/**
+	 * Returns an instance of an Atom parser.
+	 * 
+	 * @return AtomParser.
+	 */
+	private AtomParser getAtomParser()
+	{
+		if (atomParser != null)
+		{
+			return atomParser;
+		}
+		
+		atomParser = new AtomParser();
+		return atomParser;
 	}
 }

@@ -2,6 +2,7 @@ package org.jfr.parser;
 
 import org.jfr.data.Feed;
 import org.jfr.data.FeedItem;
+import org.jfr.parser.FeedParserIF;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -14,7 +15,9 @@ import org.w3c.dom.NodeList;
  */
 public class RssParser implements FeedParserIF
 {
-
+	/**
+	 * Parses the document using the expected RSS format.
+	 */
 	@Override
 	public Feed parse(Document document)
 	{
@@ -112,6 +115,7 @@ public class RssParser implements FeedParserIF
 	 */
 	private String getNodeValue(Node node)
 	{
+		// TODO: check escape requirements in RSS spec.
 		Node textNode = node.getChildNodes().item(0);
 		
 		return textNode != null ? textNode.getNodeValue() : "";
@@ -152,7 +156,7 @@ public class RssParser implements FeedParserIF
 	 */
 	private void parseItemNode(FeedItem feedItem, Node node)
 	{
-		switch(node.getNodeName().toLowerCase())
+		switch (node.getNodeName().toLowerCase())
 		{
 			case "title":
 				feedItem.setTitle(getNodeValue(node));
