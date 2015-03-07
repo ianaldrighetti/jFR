@@ -35,9 +35,18 @@ public class Feed
 	 */
 	private List<FeedItem> items;
 
+	/**
+	 * A list of authors/contributors of the feed.
+	 */
+	private List<Author> authors;
+	
+	/**
+	 * Initializes the Feed.
+	 */
 	public Feed()
 	{
 		items = new ArrayList<>();
+		authors = new ArrayList<>();
 	}
 	
 	/**
@@ -128,5 +137,33 @@ public class Feed
 	public void setItems(List<FeedItem> items)
 	{
 		this.items = items;
+	}
+	
+	/**
+	 *
+	 * @return The authors.
+	 */
+	public List<Author> getAuthors()
+	{
+		return authors;
+	}
+
+	/**
+	 *
+	 * @param author The author to add.
+	 */
+	public void addAuthor(Author author)
+	{
+		this.authors.add(author);
+	}
+	
+	/**
+	 * Sets the list of authors for the entry.
+	 * 
+	 * @param authors
+	 */
+	public void setAuthors(List<Author> authors)
+	{
+		this.authors = new ArrayList<>(authors);
 	}
 }

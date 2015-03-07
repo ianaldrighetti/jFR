@@ -120,6 +120,16 @@ public class FeedItem
 	{
 		this.authors.add(author);
 	}
+	
+	/**
+	 * Sets the list of authors for the entry.
+	 * 
+	 * @param authors
+	 */
+	public void setAuthors(List<Author> authors)
+	{
+		this.authors = new ArrayList<>(authors);
+	}
 
 	/**
 	 *

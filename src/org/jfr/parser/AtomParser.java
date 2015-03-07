@@ -1,5 +1,7 @@
 package org.jfr.parser;
 
+import org.jfr.data.Author;
+import org.jfr.data.AuthorType;
 import org.jfr.data.Feed;
 import org.jfr.data.FeedItem;
 import org.jfr.parser.FeedParserIF;
@@ -50,12 +52,23 @@ public class AtomParser implements FeedParserIF
 		return feed;
 	}
 	
+	/**
+	 * Parses the root level node within the feed.
+	 * 
+	 * @param feed
+	 * @param node
+	 */
 	private void parseNode(Feed feed, Node node)
 	{
-		switch(node.getNodeName().toLowerCase())
+		switch (node.getNodeName().toLowerCase())
 		{
 			case "title":
 				feed.setTitle(getNodeValue(node));
+				break;
+				
+			case "author":
+			case "contributor":
+				feed.addAuthor(getAuthor(node));
 				break;
 			
 			case "link":
@@ -131,6 +144,12 @@ public class AtomParser implements FeedParserIF
 			parseEntryNode(feedItem, childNode);
 		}
 		
+		// If there was no author at the <entry> level, it will inherit from the root.
+		if (feedItem.getAuthors() == null || feedItem.getAuthors().size() == 0)
+		{
+			feedItem.setAuthors(feed.getAuthors());
+		}
+		
 		feed.getItems().add(feedItem);
 	}
 	
@@ -174,6 +193,58 @@ public class AtomParser implements FeedParserIF
 				
 			case "content":
 				feedItem.setDescription(getNodeValue(node));
+				break;
+				
+			case "author":
+			case "contributor":
+				feedItem.addAuthor(getAuthor(node));
+				break;
+		}
+	}
+	
+	/**
+	 * Returns an Author instance representing the node.
+	 * 
+	 * @param node
+	 * @return Author
+	 */
+	private Author getAuthor(Node node)
+	{
+		NodeList childNodes = node.getChildNodes();
+		
+		Author author = new Author();
+		author.setType(node.getNodeName().equalsIgnoreCase("contributor") ? AuthorType.Contributor : AuthorType.Author);
+		
+		for (int index = 0; index < childNodes.getLength(); index++)
+		{
+			Node childNode = childNodes.item(index);
+			
+			setAuthorAttribute(author, childNode);
+		}
+		
+		return author;
+	}
+	
+	/**
+	 * Sets the appropriate attribute on the Author instance.
+	 * 
+	 * @param author
+	 * @param node
+	 */
+	private void setAuthorAttribute(Author author, Node node)
+	{
+		switch (node.getNodeName().toLowerCase())
+		{
+			case "name":
+				author.setName(getNodeValue(node));
+				break;
+				
+			case "email":
+				author.setEmail(getNodeValue(node));
+				break;
+				
+			case "uri":
+				author.setUrl(getNodeValue(node));
 				break;
 		}
 	}
