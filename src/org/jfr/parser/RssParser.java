@@ -6,6 +6,7 @@ import org.jfr.data.Author;
 import org.jfr.data.AuthorType;
 import org.jfr.data.Feed;
 import org.jfr.data.FeedItem;
+import org.jfr.exception.ParserException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -20,15 +21,19 @@ public class RssParser implements FeedParserIF
 {
 	/**
 	 * Parses the document using the expected RSS format.
+	 * 
+	 * @return Feed
 	 */
 	@Override
 	public Feed parse(Document document)
 	{
+		Feed feed = new Feed();
+		
 		// Get the root node.
 		Node rssElement = document.getFirstChild();
 		
 		NamedNodeMap attrMap = rssElement.getAttributes();
-		System.out.println("version = " + attrMap.getNamedItem("version").getNodeValue());
+		feed.setVersion(attrMap.getNamedItem("version").getNodeValue());
 		
 		// Now get channel.
 		NodeList childNodes = rssElement.getChildNodes();
@@ -47,23 +52,22 @@ public class RssParser implements FeedParserIF
 		
 		if (channelNode == null)
 		{
-			// TODO: Exception
-			throw new IllegalArgumentException("channel not found");
+			throw new ParserException("Parser could not find the channel element in the RSS feed.");
 		}
 		
 		// We've done enough here...
-		return parseChannel(channelNode);
+		return parseChannel(feed, channelNode);
 	}
 	
 	/**
 	 * Parses the channel tag within an RSS feed.
 	 * 
+	 * @param feed
 	 * @param channelNode
 	 * @return
 	 */
-	private Feed parseChannel(Node channelNode)
+	private Feed parseChannel(Feed feed, Node channelNode)
 	{
-		Feed feed = new Feed();
 		NodeList childNodes = channelNode.getChildNodes();
 		
 		for (int index = 0; index < childNodes.getLength(); index++)
@@ -107,6 +111,7 @@ public class RssParser implements FeedParserIF
 			
 			case "item":
 				parseItem(feed, node);
+				break;
 		}
 	}
 	
@@ -174,7 +179,8 @@ public class RssParser implements FeedParserIF
 				break;
 			
 			case "pubdate":
-				feedItem.setPubDate(getNodeValue(node));
+				feedItem.setPublished(getNodeValue(node));
+				feedItem.setUpdated(feedItem.getPublished());
 				break;
 			
 			case "guid":

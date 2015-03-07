@@ -4,6 +4,7 @@ import org.jfr.data.Author;
 import org.jfr.data.AuthorType;
 import org.jfr.data.Feed;
 import org.jfr.data.FeedItem;
+import org.jfr.exception.ParserException;
 import org.jfr.parser.FeedParserIF;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -19,14 +20,15 @@ public class AtomParser implements FeedParserIF
 {
 	/**
 	 * Parses the Atom feed.
+	 * 
+	 * @param document
 	 */
 	@Override
 	public Feed parse(Document document)
 	{
 		if (document.getFirstChild() == null)
 		{
-			// TODO: Exception
-			throw new IllegalArgumentException();
+			throw new ParserException("There was nothing found within the Atom feed source.");
 		}
 		
 		// Get the child nodes.
@@ -47,8 +49,7 @@ public class AtomParser implements FeedParserIF
 			
 			parseNode(feed, node);
 		}
-		
-		// TODO Auto-generated method stub
+
 		return feed;
 	}
 	
@@ -183,7 +184,11 @@ public class AtomParser implements FeedParserIF
 				break;
 				
 			case "updated":
-				feedItem.setPubDate(getNodeValue(node));
+				feedItem.setUpdated(getNodeValue(node));
+				break;
+				
+			case "published":
+				feedItem.setPublished(getNodeValue(node));
 				break;
 				
 			// TODO This is bad... possibly overwriting one or the other.

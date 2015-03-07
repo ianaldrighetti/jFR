@@ -39,7 +39,12 @@ public class FeedItem
 	/**
 	 * The publish date for the item.
 	 */
-	private String pubDate;
+	private String published;
+	
+	/**
+	 * The time the entry was updated.
+	 */
+	private String updated;
 
 	/**
 	 * Initializes the FeedItem.
@@ -153,18 +158,36 @@ public class FeedItem
 	 *
 	 * @return The value of pubDate.
 	 */
-	public String getPubDate()
+	public String getPublished()
 	{
-		return pubDate;
+		return published;
 	}
 
 	/**
 	 *
 	 * @param pubDate The value of pubDate.
 	 */
-	public void setPubDate(String pubDate)
+	public void setPublished(String pubDate)
 	{
-		this.pubDate = pubDate;
+		this.published = pubDate;
+	}
+
+	/**
+	 * 
+	 * @return The value of updated.
+	 */
+	public String getUpdated()
+	{
+		return updated;
+	}
+
+	/**
+	 * 
+	 * @param updated The value of updated.
+	 */
+	public void setUpdated(String updated)
+	{
+		this.updated = updated;
 	}
 
 	/**
@@ -175,6 +198,6 @@ public class FeedItem
 	{
 		return "FeedItem [title=" + title + ", link=" + link + ", description="
 				+ description + ", authors=" + Arrays.toString(authors.toArray()) + ", guid=" + guid
-				+ ", pubDate=" + pubDate + "]";
+				+ ", pubDate=" + published + ", updated = " + updated + "]";
 	}
 }

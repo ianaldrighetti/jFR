@@ -16,6 +16,11 @@ public class Feed
 	private FeedType type;
 	
 	/**
+	 * The feed version.
+	 */
+	private String version;
+	
+	/**
 	 * The title of the feed.
 	 */
 	private String title;
@@ -65,6 +70,24 @@ public class Feed
 	public void setType(FeedType type)
 	{
 		this.type = type;
+	}
+
+	/**
+	 *
+	 * @return The value of version.
+	 */
+	public String getVersion()
+	{
+		return version;
+	}
+
+	/**
+	 *
+	 * @param version The value of version.
+	 */
+	public void setVersion(String version)
+	{
+		this.version = version;
 	}
 
 	/**

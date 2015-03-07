@@ -7,5 +7,17 @@ package org.jfr.data;
  */
 public enum FeedType
 {
-	RSS, Atom
+	RSS ("RSS"), Atom ("Atom");
+	
+	private String label;
+	
+	private FeedType(String label)
+	{
+		this.label = label;
+	}
+	
+	public String getLabel()
+	{
+		return label;
+	}
 }
