@@ -1,5 +1,9 @@
 package org.jfr.data;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Represents an item within the feed.
  * 
@@ -23,9 +27,9 @@ public class FeedItem
 	private String description;
 	
 	/**
-	 * The author.
+	 * The author(s).
 	 */
-	private String author;
+	private List<Author> authors;
 	
 	/**
 	 * The GUID for the item.
@@ -37,6 +41,14 @@ public class FeedItem
 	 */
 	private String pubDate;
 
+	/**
+	 * Initializes the FeedItem.
+	 */
+	public FeedItem()
+	{
+		this.authors = new ArrayList<Author>();
+	}
+	
 	/**
 	 *
 	 * @return The value of title.
@@ -93,20 +105,20 @@ public class FeedItem
 
 	/**
 	 *
-	 * @return The value of author.
+	 * @return The authors.
 	 */
-	public String getAuthor()
+	public List<Author> getAuthors()
 	{
-		return author;
+		return authors;
 	}
 
 	/**
 	 *
-	 * @param author The value of author.
+	 * @param author The author to add.
 	 */
-	public void setAuthor(String author)
+	public void addAuthor(Author author)
 	{
-		this.author = author;
+		this.authors.add(author);
 	}
 
 	/**
@@ -152,7 +164,7 @@ public class FeedItem
 	public String toString()
 	{
 		return "FeedItem [title=" + title + ", link=" + link + ", description="
-				+ description + ", author=" + author + ", guid=" + guid
+				+ description + ", authors=" + Arrays.toString(authors.toArray()) + ", guid=" + guid
 				+ ", pubDate=" + pubDate + "]";
 	}
 }

@@ -1,8 +1,11 @@
 package org.jfr.parser;
 
+import org.apache.commons.validator.routines.EmailValidator;
+import org.apache.commons.validator.routines.UrlValidator;
+import org.jfr.data.Author;
+import org.jfr.data.AuthorType;
 import org.jfr.data.Feed;
 import org.jfr.data.FeedItem;
-import org.jfr.parser.FeedParserIF;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -179,8 +182,74 @@ public class RssParser implements FeedParserIF
 				break;
 			
 			case "author":
-				feedItem.setAuthor(getNodeValue(node));
+				feedItem.addAuthor(getAuthor(getNodeValue(node)));
 				break;
 		}
+	}
+	
+	/**
+	 * Translates a string into an Author. This will attempt to parse the string
+	 * into a name and email. For example, if the string is "Ian (me@outlook.com)"
+	 * and instance of Author with the name of Ian and email of me@outlook.com is returned.
+	 * 
+	 * @param text
+	 * @return Author
+	 */
+	private Author getAuthor(String text)
+	{
+		Author author = new Author();
+		
+		// RSS has no other type but author.
+		author.setType(AuthorType.Author);
+		
+		// There might be an email or address in parenthesis.
+		if (text.contains("(") && text.contains(")"))
+		{
+			// Get the text between the parenthesis.
+			String parenthesis = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
+			
+			setAuthorAttribute(author, parenthesis.trim());
+
+			// Now we need to remove that from the text.
+			text = text.replace("(" + parenthesis + ")", "");
+		}
+		
+		setAuthorAttribute(author, text.trim());
+		
+		return author;
+	}
+	
+	/**
+	 * This method determines what text likely represents and sets the
+	 * proper attribute on the Author.
+	 * 
+	 * @param author
+	 * @param text
+	 */
+	private void setAuthorAttribute(Author author, String text)
+	{
+		EmailValidator emailValidator = EmailValidator.getInstance(false);
+		
+		// Check if it is a valid email.
+		if (emailValidator.isValid(text))
+		{
+			// It is, so set it there.
+			author.setEmail(text);
+			
+			return;
+		}
+		
+		UrlValidator urlValidator = UrlValidator.getInstance();
+		
+		// Now check if it is a URL.
+		if (urlValidator.isValid(text))
+		{
+			author.setUrl(text);
+			
+			return;
+		}
+		
+		// If all else fails, then it will just be a name!
+		author.setName(text);
 	}
 }
